@@ -1,4 +1,5 @@
-package aziz.sohail.eurotest.Dao;
+package aziz.sohail.eurotest.JSON;
+
 
 public class LocationResponse {
 
@@ -14,6 +15,7 @@ public class LocationResponse {
     private Boolean inEurope;
     private String countryCode;
     private Boolean coreCountry;
+
     private Object distance;
 
     /**

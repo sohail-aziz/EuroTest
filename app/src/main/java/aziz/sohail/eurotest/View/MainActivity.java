@@ -1,7 +1,9 @@
-package aziz.sohail.eurotest;
+package aziz.sohail.eurotest.View;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+
+import aziz.sohail.eurotest.R;
 
 
 public class MainActivity extends ActionBarActivity {

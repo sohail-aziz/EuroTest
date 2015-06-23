@@ -1,4 +1,4 @@
-package aziz.sohail.eurotest.Dao;
+package aziz.sohail.eurotest.JSON;
 
 public class GeoPosition {
 
