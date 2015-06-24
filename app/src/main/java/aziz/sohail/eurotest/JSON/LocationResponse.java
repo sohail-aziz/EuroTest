@@ -1,22 +1,27 @@
 package aziz.sohail.eurotest.JSON;
 
 
-public class LocationResponse {
+import com.google.gson.annotations.SerializedName;
 
+public class LocationResponse implements Comparable<LocationResponse> {
+
+    @SerializedName("_id")
     private Integer Id;
     private Object key;
     private String name;
     private String fullName;
+    @SerializedName("iata_airport_code")
     private String iataAirportCode;
     private String type;
     private String country;
+    @SerializedName("geo_position")
     private GeoPosition geoPosition;
     private Object locationId;
     private Boolean inEurope;
     private String countryCode;
     private Boolean coreCountry;
 
-    private Object distance;
+    private float distance;
 
     /**
      * @return The Id
@@ -189,15 +194,23 @@ public class LocationResponse {
     /**
      * @return The distance
      */
-    public Object getDistance() {
+    public float getDistance() {
         return distance;
     }
 
     /**
      * @param distance The distance
      */
-    public void setDistance(Object distance) {
+    public void setDistance(float distance) {
         this.distance = distance;
     }
 
+
+    @Override
+    public int compareTo(LocationResponse another) {
+
+        int compareDistance = (int) another.getDistance();
+
+        return ((int) this.distance - compareDistance);
+    }
 }

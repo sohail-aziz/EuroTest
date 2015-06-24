@@ -3,35 +3,35 @@ package aziz.sohail.eurotest.JSON;
 public class GeoPosition {
 
 
-    private Float latitude;
+    private float latitude;
 
-    private Float longitude;
+    private float longitude;
 
     /**
      * @return The latitude
      */
-    public Float getLatitude() {
+    public float getLatitude() {
         return latitude;
     }
 
     /**
      * @param latitude The latitude
      */
-    public void setLatitude(Float latitude) {
+    public void setLatitude(float latitude) {
         this.latitude = latitude;
     }
 
     /**
      * @return The longitude
      */
-    public Float getLongitude() {
+    public float getLongitude() {
         return longitude;
     }
 
     /**
      * @param longitude The longitude
      */
-    public void setLongitude(Float longitude) {
+    public void setLongitude(float longitude) {
         this.longitude = longitude;
     }
 

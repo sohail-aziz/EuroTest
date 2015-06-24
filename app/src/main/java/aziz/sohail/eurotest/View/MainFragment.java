@@ -1,6 +1,7 @@
 package aziz.sohail.eurotest.View;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import aziz.sohail.eurotest.Dao.WebManagerFactory;
@@ -31,7 +33,7 @@ public class MainFragment extends Fragment {
     private AutoCompleteTextView autoCompleteTextViewStartLocation, autoCompleteTextViewEndLocation;
     private ImageButton imageButtonSelectDate;
     private TextView textViewDate;
-    private ArrayList<String> startLocations, endLocations;
+
     private ArrayAdapter<String> startLocationAdapter, endLocationAdapter;
 
     public static MainFragment newInstance() {
@@ -61,13 +63,13 @@ public class MainFragment extends Fragment {
         autoCompleteTextViewStartLocation.addTextChangedListener(textWatcher);
         autoCompleteTextViewEndLocation.addTextChangedListener(textWatcher);
 
-        startLocations = new ArrayList<>();
-        startLocationAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, startLocations);
+
+        startLocationAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, new ArrayList<String>());
         startLocationAdapter.setNotifyOnChange(true);
         autoCompleteTextViewStartLocation.setAdapter(startLocationAdapter);
 
-        endLocations = new ArrayList<>();
-        endLocationAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, endLocations);
+
+        endLocationAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, new ArrayList<String>());
         endLocationAdapter.setNotifyOnChange(true);
         autoCompleteTextViewEndLocation.setAdapter(endLocationAdapter);
 
@@ -125,24 +127,66 @@ public class MainFragment extends Fragment {
         //update adapter to auto textview
         Log.d(TAG, "locations size=" + event.locationResponseList.size());
 
-        //ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, event.locationNames);
+        //Log.i(TAG, "unsorted list:");
+        //printList(event.locationResponseList);
+
+        //sort by distance
+        Collections.sort(event.locationResponseList);
+
+        //Log.i(TAG, "sorted list:");
+        //printList(event.locationResponseList);
 
         //set the adapter to focused auto complete
         if (autoCompleteTextViewStartLocation.isFocused()) {
 
             startLocationAdapter.clear();
-            startLocationAdapter.addAll(event.locationNames);
-
-            autoCompleteTextViewStartLocation.showDropDown();
+            startLocationAdapter.addAll(getLocationNames(event.locationResponseList));
+            startLocationAdapter.getFilter().filter(autoCompleteTextViewStartLocation.getText(), autoCompleteTextViewStartLocation);
 
         } else if (autoCompleteTextViewEndLocation.isFocused()) {
 
             endLocationAdapter.clear();
-            endLocationAdapter.addAll(event.locationNames);
+            endLocationAdapter.addAll(getLocationNames(event.locationResponseList));
+            endLocationAdapter.getFilter().filter(autoCompleteTextViewEndLocation.getText(), autoCompleteTextViewEndLocation);
 
-            autoCompleteTextViewEndLocation.showDropDown();
         }
 
+    }
+
+    /**
+     * Utility method to print list with distance for debugging
+     *
+     * @param locationResponseList
+     */
+    private void printList(@NonNull List<LocationResponse> locationResponseList) {
+
+        if (locationResponseList == null) {
+            throw new IllegalArgumentException("invalid argument");
+        }
+
+
+        for (LocationResponse lr : locationResponseList) {
+            Log.d(TAG, lr.getName() + ":" + lr.getDistance());
+        }
+    }
+
+    /**
+     * Utility method which returns list location names from List  LocationResponse
+     *
+     * @param locationResponseList
+     * @return
+     */
+    private List<String> getLocationNames(@NonNull final List<LocationResponse> locationResponseList) {
+        if (locationResponseList == null) {
+            throw new IllegalArgumentException("getLocationNames: argument cannot be null");
+        }
+
+        List<String> namesList = new ArrayList<>(locationResponseList.size());
+        for (LocationResponse lr : locationResponseList) {
+            namesList.add(lr.getFullName());
+        }
+
+        return namesList;
     }
 
     /**
@@ -161,4 +205,5 @@ public class MainFragment extends Fragment {
             this.exception = exception;
         }
     }
+
 }

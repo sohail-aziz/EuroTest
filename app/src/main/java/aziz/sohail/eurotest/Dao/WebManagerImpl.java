@@ -1,5 +1,6 @@
 package aziz.sohail.eurotest.Dao;
 
+import android.location.Location;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -8,7 +9,6 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.apache.http.Header;
-import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -16,7 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import aziz.sohail.eurotest.JSON.GSON;
+import aziz.sohail.eurotest.JSON.GeoPosition;
 import aziz.sohail.eurotest.JSON.LocationResponse;
+import aziz.sohail.eurotest.LocationProvider;
+import aziz.sohail.eurotest.Utils;
 import aziz.sohail.eurotest.View.MainFragment;
 import de.greenrobot.event.EventBus;
 
@@ -47,21 +50,40 @@ public class WebManagerImpl implements WebManager {
 
                 Log.d(TAG, "onSuccess: response=" + response);
 
-                if (statusCode == HttpStatus.SC_OK && response != null) {
+                if (response != null) {
 
                     List<LocationResponse> locations = new ArrayList<>(response.length());
                     List<String> locationNames = new ArrayList<String>(response.length());
 
+                    final Location myLocation = LocationProvider.getInstance().getCurrentLocation();
+                    final Location targetLocation = new Location("");
                     Gson gson = GSON.getGson();
                     try {
 
                         for (int i = 0, len = response.length(); i < len; i++) {
-                            final LocationResponse locationResponse = gson.fromJson(response.getJSONObject(i).toString(), LocationResponse.class);
-                            locations.add(locationResponse);
-                            locationNames.add(locationResponse.getName());
-                        }
 
+                            LocationResponse locationResponse = gson.fromJson(response.getJSONObject(i).toString(), LocationResponse.class);
+
+                            GeoPosition targetGeoPosition = locationResponse.getGeoPosition();
+
+                            Log.d(TAG, "targetGeoPostion:" + targetGeoPosition);
+                            if (targetGeoPosition != null && myLocation != null) {
+
+                                targetLocation.setLatitude((double) targetGeoPosition.getLatitude());
+                                targetLocation.setLongitude((double) targetGeoPosition.getLongitude());
+
+                                float distance = Utils.getDistance(myLocation, targetLocation);
+                                locationResponse.setDistance(distance);
+                            } else {
+                                Log.e(TAG, "target or current location is null");
+                            }
+
+                            locations.add(locationResponse);
+
+                        }
                         EventBus.getDefault().post(new MainFragment.EventOnLocationSearch(locations, locationNames, null));
+
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                         EventBus.getDefault().post(new MainFragment.EventOnLocationSearch(null, null, e));
