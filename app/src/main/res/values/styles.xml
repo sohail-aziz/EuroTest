@@ -5,4 +5,12 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="bordered_text_box">
+
+        <item name="android:padding">8dp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/text_small</item>
+        <item name="android:background">@drawable/text_box_background</item>
+
+    </style>
 </resources>

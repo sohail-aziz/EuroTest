@@ -38,6 +38,7 @@ public class MainActivity extends ActionBarActivity implements
         }
 
         if (!isGooglePlayServicesAvailable()) {
+            Toast.makeText(this, "Can't get your location, Google play services are not installed on your device ", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -64,7 +65,7 @@ public class MainActivity extends ActionBarActivity implements
             Log.d(TAG, "current latitude:longitude:" + currentLocation.getLatitude() + ":" + currentLocation.getLongitude());
         } else {
             Log.e(TAG, "current location is null");
-            Toast.makeText(this, "Please verify that you have enabled the location", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please verify that you have enabled the location and restart", Toast.LENGTH_SHORT).show();
         }
 
     }

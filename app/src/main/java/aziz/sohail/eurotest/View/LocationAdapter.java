@@ -17,6 +17,7 @@ import aziz.sohail.eurotest.R;
 /**
  * Created by Sohail Aziz on 6/24/2015.
  */
+
 public class LocationAdapter extends BaseAdapter {
 
     private Context context;

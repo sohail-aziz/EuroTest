@@ -6,4 +6,12 @@
     <string name="action_settings">Settings</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string name="title_fragment_main">GoEuro</string>
+    <string name="button_search_fragment_main">Search</string>
+    <string name="hint_start_location_fragment_main">Enter start location</string>
+    <string name="hint_end_location_fragment_main">Enter end location</string>
+    <string name="hint_date_fragment_main">Select date from calender</string>
+
+    <string name="search_message_fragment_main">Search is not yet implemented</string>
+
 </resources>

@@ -1,5 +1,6 @@
 package aziz.sohail.eurotest.View;
 
+import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -11,17 +12,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.DatePicker;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
 import aziz.sohail.eurotest.Dao.WebManagerFactory;
 import aziz.sohail.eurotest.JSON.LocationResponse;
 import aziz.sohail.eurotest.R;
+import aziz.sohail.eurotest.Utils;
 import de.greenrobot.event.EventBus;
 
 
@@ -57,6 +63,7 @@ public class MainFragment extends Fragment {
         textViewDate = (TextView) root.findViewById(R.id.textview_date_fragment_main);
 
         imageButtonSelectDate.setOnClickListener(dateClickListener);
+        root.findViewById(R.id.button_search_fragment_main).setOnClickListener(searchClickListener);
 
         autoCompleteTextViewStartLocation.setThreshold(2);
         autoCompleteTextViewEndLocation.setThreshold(2);
@@ -77,10 +84,34 @@ public class MainFragment extends Fragment {
         return root;
     }
 
+    private View.OnClickListener searchClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Toast.makeText(getActivity(), R.string.search_message_fragment_main, Toast.LENGTH_SHORT).show();
+        }
+    };
     private View.OnClickListener dateClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
 
+            Calendar calendar = Calendar.getInstance();
+            final int startYear = calendar.get(Calendar.YEAR);
+            final int startMonth = (calendar.get(Calendar.MONTH));
+            final int startDay = calendar.get(Calendar.DAY_OF_MONTH);
+            DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+
+
+                    //month start at 0
+                    DateTime selectedDate = new DateTime().withDate(year, (monthOfYear + 1), dayOfMonth);
+                    textViewDate.setText(Utils.getFormattedDate(selectedDate));
+
+
+                }
+            }, startYear, startMonth, startDay);
+
+            datePickerDialog.show();
         }
     };
 
@@ -92,7 +123,8 @@ public class MainFragment extends Fragment {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (s.length() >= 2) {
+
+            if (s != "" && s.length() >= 2) {
                 Log.d(TAG, "onTextChanged: s.len=" + s.length());
                 WebManagerFactory.getWebManager().getLocations(s.toString());
             }
