@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import aziz.sohail.eurotest.JSON.GSON;
@@ -53,7 +54,7 @@ public class WebManagerImpl implements WebManager {
                 if (response != null) {
 
                     List<LocationResponse> locations = new ArrayList<>(response.length());
-                    List<String> locationNames = new ArrayList<String>(response.length());
+
 
                     final Location myLocation = LocationProvider.getInstance().getCurrentLocation();
                     final Location targetLocation = new Location("");
@@ -74,6 +75,7 @@ public class WebManagerImpl implements WebManager {
 
                                 float distance = Utils.getDistance(myLocation, targetLocation);
                                 locationResponse.setDistance(distance);
+
                             } else {
                                 Log.e(TAG, "target or current location is null");
                             }
@@ -81,7 +83,13 @@ public class WebManagerImpl implements WebManager {
                             locations.add(locationResponse);
 
                         }
-                        EventBus.getDefault().post(new MainFragment.EventOnLocationSearch(locations, locationNames, null));
+
+                        //sort arraylist
+                        Collections.sort(locations);
+                        List<String> locationNameList = getLocationNames(locations);
+
+                        //get
+                        EventBus.getDefault().post(new MainFragment.EventOnLocationSearch(locations, locationNameList, null));
 
 
                     } catch (JSONException e) {
@@ -105,5 +113,24 @@ public class WebManagerImpl implements WebManager {
         });
 
 
+    }
+
+    /**
+     * Utility method which returns list location names from List  LocationResponse
+     *
+     * @param locationResponseList
+     * @return
+     */
+    private List<String> getLocationNames(@NonNull final List<LocationResponse> locationResponseList) {
+        if (locationResponseList == null) {
+            throw new IllegalArgumentException("getLocationNames: argument cannot be null");
+        }
+
+        List<String> namesList = new ArrayList<>(locationResponseList.size());
+        for (LocationResponse lr : locationResponseList) {
+            namesList.add(lr.getFullName());
+        }
+
+        return namesList;
     }
 }

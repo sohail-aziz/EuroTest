@@ -2,7 +2,6 @@ package aziz.sohail.eurotest.View;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,7 +20,6 @@ import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 
 import aziz.sohail.eurotest.Dao.WebManagerFactory;
@@ -148,6 +146,11 @@ public class MainFragment extends Fragment {
         EventBus.getDefault().register(this);
     }
 
+    /**
+     * Subscribe for EventOnLocationSearch [on main thread]
+     *
+     * @param event
+     */
     public void onEventMainThread(EventOnLocationSearch event) {
         Log.d(TAG, "EventOnLocationSearch");
         if (event.exception != null) {
@@ -159,67 +162,23 @@ public class MainFragment extends Fragment {
         //update adapter to auto textview
         Log.d(TAG, "locations size=" + event.locationResponseList.size());
 
-        //Log.i(TAG, "unsorted list:");
-        //printList(event.locationResponseList);
-
-        //sort by distance
-        Collections.sort(event.locationResponseList);
-
-        //Log.i(TAG, "sorted list:");
-        //printList(event.locationResponseList);
-
         //set the adapter to focused auto complete
         if (autoCompleteTextViewStartLocation.isFocused()) {
 
             startLocationAdapter.clear();
-            startLocationAdapter.addAll(getLocationNames(event.locationResponseList));
+            startLocationAdapter.addAll(event.locationNames);
             startLocationAdapter.getFilter().filter(autoCompleteTextViewStartLocation.getText(), autoCompleteTextViewStartLocation);
 
         } else if (autoCompleteTextViewEndLocation.isFocused()) {
 
             endLocationAdapter.clear();
-            endLocationAdapter.addAll(getLocationNames(event.locationResponseList));
+            endLocationAdapter.addAll(event.locationNames);
             endLocationAdapter.getFilter().filter(autoCompleteTextViewEndLocation.getText(), autoCompleteTextViewEndLocation);
 
         }
 
     }
 
-    /**
-     * Utility method to print list with distance for debugging
-     *
-     * @param locationResponseList
-     */
-    private void printList(@NonNull List<LocationResponse> locationResponseList) {
-
-        if (locationResponseList == null) {
-            throw new IllegalArgumentException("invalid argument");
-        }
-
-
-        for (LocationResponse lr : locationResponseList) {
-            Log.d(TAG, lr.getName() + ":" + lr.getDistance());
-        }
-    }
-
-    /**
-     * Utility method which returns list location names from List  LocationResponse
-     *
-     * @param locationResponseList
-     * @return
-     */
-    private List<String> getLocationNames(@NonNull final List<LocationResponse> locationResponseList) {
-        if (locationResponseList == null) {
-            throw new IllegalArgumentException("getLocationNames: argument cannot be null");
-        }
-
-        List<String> namesList = new ArrayList<>(locationResponseList.size());
-        for (LocationResponse lr : locationResponseList) {
-            namesList.add(lr.getFullName());
-        }
-
-        return namesList;
-    }
 
     /**
      * Class for Location Search Events
