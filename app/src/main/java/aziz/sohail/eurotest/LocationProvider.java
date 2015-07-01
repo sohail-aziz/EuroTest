@@ -2,6 +2,8 @@ package aziz.sohail.eurotest;
 
 import android.location.Location;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Created by Sohail Aziz on 6/25/2015.
  */
@@ -15,6 +17,7 @@ public class LocationProvider {
 
     }
 
+    @NotNull
     public static LocationProvider getInstance() {
         return instance;
     }

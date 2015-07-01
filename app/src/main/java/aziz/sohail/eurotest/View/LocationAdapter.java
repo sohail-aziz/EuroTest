@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 import aziz.sohail.eurotest.JSON.LocationResponse;
@@ -47,8 +49,9 @@ public class LocationAdapter extends BaseAdapter {
         return position;
     }
 
+    @Nullable
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, @Nullable View convertView, ViewGroup parent) {
 
         ViewHolder viewHolder;
         if (convertView == null) {

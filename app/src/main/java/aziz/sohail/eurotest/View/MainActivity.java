@@ -12,6 +12,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationServices;
 
+import org.jetbrains.annotations.Nullable;
+
 import aziz.sohail.eurotest.LocationProvider;
 import aziz.sohail.eurotest.R;
 
@@ -27,7 +29,7 @@ public class MainActivity extends ActionBarActivity implements
     private Location currentLocation;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

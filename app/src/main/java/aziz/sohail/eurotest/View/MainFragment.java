@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ public class MainFragment extends Fragment {
 
     private ArrayAdapter<String> startLocationAdapter, endLocationAdapter;
 
+    @NotNull
     public static MainFragment newInstance() {
         MainFragment fragment = new MainFragment();
         return fragment;
@@ -50,7 +52,7 @@ public class MainFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_main, container, false);
@@ -82,12 +84,14 @@ public class MainFragment extends Fragment {
         return root;
     }
 
+    @NotNull
     private View.OnClickListener searchClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             Toast.makeText(getActivity(), R.string.search_message_fragment_main, Toast.LENGTH_SHORT).show();
         }
     };
+    @NotNull
     private View.OnClickListener dateClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -113,6 +117,7 @@ public class MainFragment extends Fragment {
         }
     };
 
+    @NotNull
     private TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -120,7 +125,7 @@ public class MainFragment extends Fragment {
         }
 
         @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        public void onTextChanged(@NotNull CharSequence s, int start, int before, int count) {
 
             if (s != "" && s.length() >= 2) {
                 Log.d(TAG, "onTextChanged: s.len=" + s.length());
@@ -151,7 +156,7 @@ public class MainFragment extends Fragment {
      *
      * @param event
      */
-    public void onEventMainThread(EventOnLocationSearch event) {
+    public void onEventMainThread(@NotNull EventOnLocationSearch event) {
         Log.d(TAG, "EventOnLocationSearch");
         if (event.exception != null) {
             Log.e(TAG, "EventOnLocationSearch: e=" + event.exception.getMessage());

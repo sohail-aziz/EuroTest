@@ -3,6 +3,8 @@ package aziz.sohail.eurotest.JSON;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.jetbrains.annotations.NotNull;
+
 public class LocationResponse implements Comparable<LocationResponse> {
 
     @SerializedName("_id")
@@ -207,7 +209,7 @@ public class LocationResponse implements Comparable<LocationResponse> {
 
 
     @Override
-    public int compareTo(LocationResponse another) {
+    public int compareTo(@NotNull LocationResponse another) {
 
         int compareDistance = (int) another.getDistance();
 

@@ -9,6 +9,8 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 import org.apache.http.Header;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -46,7 +48,7 @@ public class WebManagerImpl implements WebManager {
 
         client.get(searchUrl, new JsonHttpResponseHandler() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+            public void onSuccess(int statusCode, Header[] headers, @Nullable JSONArray response) {
                 super.onSuccess(statusCode, headers, response);
 
                 Log.d(TAG, "onSuccess: response=" + response);
@@ -88,7 +90,7 @@ public class WebManagerImpl implements WebManager {
                         Collections.sort(locations);
                         List<String> locationNameList = getLocationNames(locations);
 
-                        //get
+                        //posting success event
                         EventBus.getDefault().post(new MainFragment.EventOnLocationSearch(locations, locationNameList, null));
 
 
@@ -98,6 +100,8 @@ public class WebManagerImpl implements WebManager {
                     }
 
                 } else {
+
+                    //posting failure event
                     EventBus.getDefault().post(new MainFragment.EventOnLocationSearch(null, null, new Exception("error")));
                 }
             }
@@ -107,6 +111,7 @@ public class WebManagerImpl implements WebManager {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
                 Log.e(TAG, "onFailure: error=" + errorResponse);
 
+                //posting failure event
                 EventBus.getDefault().post(new MainFragment.EventOnLocationSearch(null, null, new Exception(throwable)));
 
             }
@@ -121,6 +126,7 @@ public class WebManagerImpl implements WebManager {
      * @param locationResponseList
      * @return
      */
+    @NotNull
     private List<String> getLocationNames(@NonNull final List<LocationResponse> locationResponseList) {
         if (locationResponseList == null) {
             throw new IllegalArgumentException("getLocationNames: argument cannot be null");
